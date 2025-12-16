@@ -51,14 +51,14 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${String(message.senderId) === String(authUser._id) ? "chat-end" : "chat-start"}`}
             ref={messageEndRef}
           >
             <div className=" chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
                   src={
-                    message.senderId === authUser._id
+                    String(message.senderId) === String(authUser._id)
                       ? authUser.profilePic || "/avatar.png"
                       : selectedUser.profilePic || "/avatar.png"
                   }
@@ -72,7 +72,7 @@ const ChatContainer = () => {
               </time>
             </div>
             <div className={`chat-bubble flex flex-col shadow-sm ${
-              message.senderId === authUser._id 
+              String(message.senderId) === String(authUser._id) 
                 ? "bg-primary text-primary-content" 
                 : "bg-base-200 text-base-content"
             }`}>

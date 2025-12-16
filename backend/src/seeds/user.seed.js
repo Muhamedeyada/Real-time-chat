@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import { connectDB } from "../lib/db.js";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 config();
 
@@ -104,10 +105,29 @@ const seedDatabase = async () => {
   try {
     await connectDB();
 
-    await User.insertMany(seedUsers);
+    // Hash passwords and create users
+    for (const userData of seedUsers) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userData.password, salt);
+      
+      try {
+        await User.create({
+          ...userData,
+          password: hashedPassword,
+        });
+      } catch (error) {
+        // Skip if user already exists
+        if (error.code !== '23505') { // PostgreSQL unique violation error code
+          console.error(`Error creating user ${userData.email}:`, error.message);
+        }
+      }
+    }
+    
     console.log("Database seeded successfully");
+    process.exit(0);
   } catch (error) {
     console.error("Error seeding database:", error);
+    process.exit(1);
   }
 };
 

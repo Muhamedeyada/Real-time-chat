@@ -1,6 +1,4 @@
 export const THEMES = [
-  "yallachat",      // Custom modern chat theme (light)
-  "yallachatDark",  // Custom modern chat theme (dark)
   "light",
   "dark",
   "cupcake",
