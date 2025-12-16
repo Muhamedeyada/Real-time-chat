@@ -14,7 +14,7 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 const __dirname = path.resolve();
 
 app.use(express.json());
