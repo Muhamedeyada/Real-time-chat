@@ -9,8 +9,11 @@ export const getUsersForSidebar = async (req, res) => {
     const loggedInUserId = req.user.id;
     const filteredUsers = await User.findAllExcept(loggedInUserId);
 
+    // Ensure we always return an array
+    const users = Array.isArray(filteredUsers) ? filteredUsers : [];
+
     // Format response to match frontend expectations (use _id instead of id)
-    const formattedUsers = filteredUsers.map(user => ({
+    const formattedUsers = users.map(user => ({
       _id: user.id,
       email: user.email,
       fullName: user.fullName,
@@ -22,7 +25,7 @@ export const getUsersForSidebar = async (req, res) => {
     res.status(200).json(formattedUsers);
   } catch (error) {
     console.error("Error in getUsersForSidebar: ", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -33,8 +36,11 @@ export const getMessages = async (req, res) => {
 
     const messages = await Message.findConversation(parseInt(myId), parseInt(userToChatId));
 
+    // Ensure we always return an array
+    const messagesArray = Array.isArray(messages) ? messages : [];
+
     // Format response to match frontend expectations (use _id instead of id)
-    const formattedMessages = messages.map(message => ({
+    const formattedMessages = messagesArray.map(message => ({
       _id: message.id,
       senderId: message.senderId,
       receiverId: message.receiverId,
@@ -47,7 +53,7 @@ export const getMessages = async (req, res) => {
     res.status(200).json(formattedMessages);
   } catch (error) {
     console.error("Error in getMessages controller:", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
